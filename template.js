@@ -1,4 +1,4 @@
-$(function(){
+jQuery(function(){
 	var Templating = function(){};
 	Templating._cache = {};
 	Templating._queues = {};
@@ -8,12 +8,12 @@ $(function(){
 		if(Templating._cache[location] === undefined){
 			//not loaded fetch
 			Templating._cache[location] = Templating.FETCHING;
-			$.ajax({url: "/views/" + location + ".haml",
+			jQuery.ajax({url: "/views/" + location + ".haml",
 			       data: {},
 			       dataType: null,
 			       type: 'get',
 			       success: function(data) {
-			         var template = Templating._cache[location] = Haml.compile(data);
+			         var template = Templating._cache[location] = Haml.optimize(Haml.compile(data));
 							 var q = Templating._queues[location];
 							 if(q != undefined){
 								for(x in q){
@@ -48,7 +48,7 @@ $(function(){
 	};	
 	
 	Templating.renderCallback = function(callback, context, html){
-		if(_.isUndefined(context)) callback();
+		if(_.isUndefined(context)) callback(html);
 		else{
 			var cb = _.bind(callback, context, html);
 			cb();
